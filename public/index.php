@@ -7,6 +7,7 @@ use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Email;
 
 require_once __DIR__ . '/../vendor/autoload.php';
+$appConfig = require_once __DIR__ . '/../config/app.php';
 
 $registration = new Registration();
 $registration->setName("Wander")
