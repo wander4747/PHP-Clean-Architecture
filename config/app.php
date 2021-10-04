@@ -2,10 +2,10 @@
 
 return [
     'db' => [
-        'host' => 'clean-arch-db',
+        'host' => 'localhost',
         'username' => 'root',
-        'password' => 'secret',
-        'port' => '3306',
+        'password' => '',
+        'port' => '3307',
         'dbname' => 'clean_arch',
         'charset' => 'utf8'
     ]
