@@ -12,22 +12,15 @@ use App\Infra\Repositories\Mysql\PdoRegistrationRepository;
 require_once __DIR__ . '/../vendor/autoload.php';
 $appConfig = require_once __DIR__ . '/../config/app.php';
 
-$registration = new Registration();
-$registration->setName("Wander")
-    ->setEmail(new Email("wander.douglas14@gmail.com"))
-    ->setBirthDate(new DateTimeImmutable('1990-09-19'))
-    ->setRegistrationAt(new DateTimeImmutable())
-    ->setRegistrationNumber(new Cpf('261.537.790-69'));
+// usecases
+$sqlite = "sqlite:../database.db";
+$pdo = new PDO($sqlite);
+$pdo->setAttribute( PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
-echo '<pre>';print_r($registration);
-
-//$loadRegistrationRepository = new PdoRegistrationRepository();
+$loadRegistrationRepository = new PdoRegistrationRepository($pdo);
 $pdfExporter = new Html2PdfAdapter();
 $storage = new LocalStorageAdapter();
 
-$content =  $pdfExporter->generate($registration);
-$storage->store("test.pdf", __DIR__.'/../storage/registrations', $content);
-die();
 $exportRegistrationUseCase = new ExportRegistration($loadRegistrationRepository, $pdfExporter, $storage);
-$inputBoundary = new InputBoundary('261.537.790-69', 'xpto', __DIR__.'/../storage');
+$inputBoundary = new InputBoundary('01234567890', 'xpto.pdf', __DIR__.'/../storage');
 $output = $exportRegistrationUseCase->handle($inputBoundary);
