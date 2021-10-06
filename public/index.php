@@ -5,6 +5,7 @@ use App\Application\UseCases\ExportRegistration\InputBoundary;
 use App\Domain\Entities\Registration;
 use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Email;
+use App\Infra\Adapters\DomPdfAdapter;
 use App\Infra\Adapters\Html2PdfAdapter;
 use App\Infra\Adapters\LocalStorageAdapter;
 use App\Infra\Http\Controllers\ExportRegistrationController;
@@ -22,7 +23,8 @@ $pdo = new PDO($sqlite);
 $pdo->setAttribute( PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
 $loadRegistrationRepository = new PdoRegistrationRepository($pdo);
-$pdfExporter = new Html2PdfAdapter();
+//$pdfExporter = new Html2PdfAdapter();
+$pdfExporter = new DomPdfAdapter();
 $storage = new LocalStorageAdapter();
 
 $exportRegistrationUseCase = new ExportRegistration($loadRegistrationRepository, $pdfExporter, $storage);
@@ -39,4 +41,4 @@ $exportRegistrationController = new ExportRegistrationController(
 );
 
 $exportRegistrationPresenter = new ExportRegistrationPresenter();
-echo $exportRegistrationController->handle($exportRegistrationPresenter);
+echo $exportRegistrationController->handle($exportRegistrationPresenter)->getBody();

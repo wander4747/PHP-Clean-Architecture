@@ -23,7 +23,7 @@ final class ExportRegistrationController
         $this->useCase = $useCase;
     }
 
-    public function handle(Presentation $presentation): string
+    public function handle(Presentation $presentation): Response
     {
         $inputBoundary = new InputBoundary(
             '01234567890',
@@ -31,8 +31,15 @@ final class ExportRegistrationController
             __DIR__.'/../../../../storage');
 
         $output = $this->useCase->handle($inputBoundary);
-        return $presentation->output([
-            'fullFileName' => $output->getFullFileName()
-        ]);
+
+        $this->response
+            ->getBody()
+            ->write($presentation->output([
+                'fullFileName' => $output->getFullFileName()
+            ]));
+
+        return $this->response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
     }
 }
