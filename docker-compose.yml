@@ -11,8 +11,6 @@ services:
       - XDEBUG_DISCOVER_CLIENT_HOST=false
     ports:
         - '8888:80'
-    links:
-      - mysql
     networks:
       - clean-arch-network
 
