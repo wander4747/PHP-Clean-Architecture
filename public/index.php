@@ -8,6 +8,7 @@ use App\Domain\ValueObjects\Email;
 use App\Infra\Adapters\Html2PdfAdapter;
 use App\Infra\Adapters\LocalStorageAdapter;
 use App\Infra\Http\Controllers\ExportRegistrationController;
+use App\Infra\Presentation\ExportRegistrationPresenter;
 use App\Infra\Repositories\Mysql\PdoRegistrationRepository;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -26,6 +27,8 @@ $storage = new LocalStorageAdapter();
 
 $exportRegistrationUseCase = new ExportRegistration($loadRegistrationRepository, $pdfExporter, $storage);
 
+
+// controller
 $request = new Request('GET', 'http://localhost:8888');
 $response = new Response();
 
@@ -35,4 +38,5 @@ $exportRegistrationController = new ExportRegistrationController(
     $exportRegistrationUseCase
 );
 
-$exportRegistrationController->handle();
+$exportRegistrationPresenter = new ExportRegistrationPresenter();
+echo $exportRegistrationController->handle($exportRegistrationPresenter);

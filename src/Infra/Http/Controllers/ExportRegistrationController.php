@@ -6,6 +6,7 @@ namespace App\Infra\Http\Controllers;
 
 use App\Application\UseCases\ExportRegistration\ExportRegistration;
 use App\Application\UseCases\ExportRegistration\InputBoundary;
+use App\Application\UseCases\ExportRegistration\OutputBoundary;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -22,13 +23,16 @@ final class ExportRegistrationController
         $this->useCase = $useCase;
     }
 
-    public function handle(): string
+    public function handle(Presentation $presentation): string
     {
         $inputBoundary = new InputBoundary(
             '01234567890',
             'xpto.pdf',
             __DIR__.'/../../../../storage');
+
         $output = $this->useCase->handle($inputBoundary);
-        return $output->getFullFileName();
+        return $presentation->output([
+            'fullFileName' => $output->getFullFileName()
+        ]);
     }
 }
